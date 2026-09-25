@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detection / blue-team</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="consent">🛡️ BLUE-TEAM MODULE — this page captures nothing; it audits your browser's exposure.</div>
+  <div class="wrap">
+    <h1>🛡️ Detection module</h1>
+    <p class="muted">The red-team modules rely on browser permissions. This page shows their current state so you can see the defensive signals.</p>
+
+    <div class="card">
+      <h3>Permission status</h3>
+      <table id="perms">
+        <tr><th>Permission</th><th>State</th></tr>
+      </table>
+      <p class="muted">A page can only read precise location or camera if these say <code>granted</code>. "prompt" means the browser will ask; "denied" blocks it outright.</p>
+    </div>
+
+    <div class="card">
+      <h3>Passive signals already visible (no permission needed)</h3>
+      <pre id="passive"></pre>
+      <p class="muted">This is why even without granting anything, a page learns your platform, screen, language and core count. Your IP is visible server-side.</p>
+    </div>
+
+    <div class="card">
+      <h3>Defensive checklist</h3>
+      <ul>
+        <li>Read every camera/location/mic prompt — deny by default.</li>
+        <li>Watch for the browser's active-camera/mic indicator.</li>
+        <li>Verify the domain before typing a password; rely on a password manager's domain match.</li>
+        <li>Be suspicious of pages served from ephemeral tunnels (<code>*.trycloudflare.com</code>, <code>*.ngrok-free.app</code>, <code>*.loclx.io</code>).</li>
+        <li>Enforce phishing-resistant 2FA (passkeys/FIDO2).</li>
+      </ul>
+    </div>
+    <p><a href="{{ url_for('index') }}">&larr; back</a></p>
+  </div>
+
+  <script>
+    async function checkPerms() {
+      const t = document.getElementById("perms");
+      const names = ["geolocation", "camera", "microphone", "notifications"];
+      for (const n of names) {
+        let state = "unsupported";
+        try { state = (await navigator.permissions.query({ name: n })).state; }
+        catch (e) { state = "n/a"; }
+        const row = t.insertRow();
+        row.insertCell().textContent = n;
+        row.insertCell().textContent = state;
+      }
+    }
+    document.getElementById("passive").textContent = JSON.stringify({
+      platform: navigator.platform,
+      userAgent: navigator.userAgent,
+      screen: screen.width + "x" + screen.height,
+      language: navigator.language,
+      cores: navigator.hardwareConcurrency,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    }, null, 2);
+    checkPerms();
+  </script>
+</body>
+</html>

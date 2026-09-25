@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ACME Portal — Sign in</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="consent">⚠️ DEMO — this is a fake "ACME" login for a phishing-awareness exercise. Do not enter a real password.</div>
+  <div class="wrap" style="max-width:420px">
+    <h1 style="text-align:center">🔒 ACME Portal</h1>
+    <div class="card">
+      <!-- Zphisher essence: a look-alike form whose action points at a logger.
+           Deliberately a fictional brand, not a cloned real service. -->
+      <form method="POST" action="{{ url_for('api_portal') }}">
+        <label>Company email</label>
+        <input type="text" name="username" placeholder="you@acme.example" autocomplete="off" required>
+        <label>Password</label>
+        <input type="password" name="password" placeholder="(use a fake password)" autocomplete="off" required>
+        <div style="margin-top:16px"><button class="btn" style="width:100%">Sign in</button></div>
+      </form>
+    </div>
+    <p class="muted" style="text-align:center">The lesson: a page can look right and still be hostile. Check the URL; use 2FA.</p>
+    <p style="text-align:center"><a href="{{ url_for('index') }}">&larr; back</a></p>
+  </div>
+</body>
+</html>

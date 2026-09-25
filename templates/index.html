@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>edu-recon-lab</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="consent">⚠️ SECURITY LAB DEMO — for educational use on systems you own only. Data captured here stays on this machine.</div>
+  <div class="wrap">
+    <h1>edu-recon-lab</h1>
+    <p class="muted">One prototype demonstrating the core mechanism of three recon/social-engineering tools. Each module below leaks a different class of data — open the dashboard to see exactly what.</p>
+
+    <div class="grid">
+      <div class="card">
+        <span class="pill">Seeker</span>
+        <h3>Geolocation</h3>
+        <p class="muted">Uses the browser Geolocation API + passive device fingerprinting.</p>
+        <a class="btn" href="{{ url_for('geo_page') }}">Open module</a>
+      </div>
+      <div class="card">
+        <span class="pill">CamHacker</span>
+        <h3>Webcam frame</h3>
+        <p class="muted">Uses getUserMedia + a canvas snapshot.</p>
+        <a class="btn" href="{{ url_for('cam_page') }}">Open module</a>
+      </div>
+      <div class="card">
+        <span class="pill">Zphisher</span>
+        <h3>Credential form</h3>
+        <p class="muted">A generic look-alike login that POSTs to a logger.</p>
+        <a class="btn" href="{{ url_for('portal_page') }}">Open module</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Operator dashboard</h3>
+      <p class="muted">Everything the modules captured, so you can analyse the footprint each technique leaves.</p>
+      <a class="btn warn" href="{{ url_for('dashboard') }}">Open dashboard</a>
+    </div>
+
+    <div class="card">
+      <span class="pill">Blue team</span>
+      <h3>🛡️ Detection module</h3>
+      <p class="muted">Audits browser permission state + passive signals; captures nothing. The defensive counterpart to the modules above.</p>
+      <a class="btn" href="{{ url_for('detect_page') }}">Open module</a>
+    </div>
+  </div>
+</body>
+</html>

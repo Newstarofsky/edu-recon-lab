@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Security awareness test</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="consent">⚠️ SECURITY LAB DEMO</div>
+  <div class="wrap" style="max-width:520px;text-align:center">
+    <h1>🎣 This was a phishing simulation</h1>
+    <div class="card">
+      <p>If this were real, the credentials you just typed would now be in an attacker's hands.</p>
+      <p class="muted">Real attacks skip this screen and silently redirect you to the genuine site so you never notice. That silence is the whole trick.</p>
+      <p><strong>Defences:</strong> verify the domain before typing a password, use a password manager (it won't autofill on a look-alike domain), and enable 2FA.</p>
+      <a class="btn" href="{{ url_for('index') }}">Back to lab</a>
+    </div>
+  </div>
+</body>
+</html>

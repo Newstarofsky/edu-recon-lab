@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Camera check</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="consent">⚠️ DEMO — clicking below turns on your camera and sends one frame to this local lab app.</div>
+  <div class="wrap">
+    <h1>📷 Webcam module <span class="pill">CamHacker</span></h1>
+    <div class="card">
+      <p>Click to demonstrate a consent-gated camera capture. Note the browser's active-camera indicator — that indicator is the defensive signal a target should notice.</p>
+      <button class="btn" id="go">Enable camera (demo)</button>
+      <p id="status" class="muted"></p>
+      <video id="v" autoplay playsinline width="320" style="border-radius:8px;margin-top:10px;display:none"></video>
+      <canvas id="c" style="display:none"></canvas>
+    </div>
+    <p><a href="{{ url_for('index') }}">&larr; back</a></p>
+  </div>
+
+  <script>
+    document.getElementById("go").onclick = async function () {
+      const s = document.getElementById("status");
+      const v = document.getElementById("v");
+      const c = document.getElementById("c");
+      try {
+        s.textContent = "Awaiting permission…";
+        // --- REQUIRES the user to grant camera access ---
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        v.style.display = "block";
+        v.srcObject = stream;
+        await new Promise(r => v.onloadedmetadata = r);
+        // Draw one frame to a hidden canvas, then export as a data URL.
+        c.width = v.videoWidth; c.height = v.videoHeight;
+        c.getContext("2d").drawImage(v, 0, 0);
+        const image = c.toDataURL("image/png");
+        // Stop the camera immediately (demo captures a single frame).
+        stream.getTracks().forEach(t => t.stop());
+        v.style.display = "none";
+        await fetch("/api/cam", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ image })
+        });
+        s.textContent = "Frame captured. See the dashboard.";
+      } catch (e) {
+        s.textContent = "Denied / failed: " + e.message;
+      }
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Location check</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="consent">⚠️ DEMO — clicking below shares your location with this local lab app.</div>
+  <div class="wrap">
+    <h1>📍 Location module <span class="pill">Seeker</span></h1>
+    <div class="card">
+      <p>Click to demonstrate a consent-gated geolocation request. Your browser will show its native permission prompt — that prompt is the user's line of defence.</p>
+      <button class="btn" id="go">Share my location (demo)</button>
+      <p id="status" class="muted"></p>
+    </div>
+    <p><a href="{{ url_for('index') }}">&larr; back</a></p>
+  </div>
+
+  <script>
+    // --- Passive fingerprinting: available WITHOUT any permission prompt ---
+    function deviceInfo() {
+      return {
+        platform: navigator.platform,
+        screen: screen.width + "x" + screen.height,
+        lang: navigator.language,
+        cores: navigator.hardwareConcurrency
+      };
+    }
+
+    document.getElementById("go").onclick = function () {
+      const s = document.getElementById("status");
+      if (!navigator.geolocation) { s.textContent = "Geolocation unsupported."; return; }
+      s.textContent = "Awaiting permission…";
+      // --- High-accuracy location: REQUIRES the user to click "Allow" ---
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          const payload = Object.assign({
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude,
+            accuracy: pos.coords.accuracy
+          }, deviceInfo());
+          fetch("/api/geo", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+          }).then(() => s.textContent = "Captured. See the dashboard.");
+        },
+        function (err) { s.textContent = "Denied / failed: " + err.message; },
+        { enableHighAccuracy: true }
+      );
+    };
+  </script>
+</body>
+</html>

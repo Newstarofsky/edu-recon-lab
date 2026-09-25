@@ -1,0 +1,7 @@
+# Runtime artifacts — never commit captured lab data
+lab.db
+captures/*.png
+captures/*.jpg
+__pycache__/
+.venv/
+*.pyc
