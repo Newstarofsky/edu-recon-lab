@@ -11,6 +11,46 @@ cybersecurity lab **on systems you own**.
 | `/portal` | **Zphisher**  | Look-alike login form → server-side credential logger |
 | `/dashboard` | (operator view) | Shows exactly what each technique leaked |
 
+## Security / architecture review
+
+**Data flow — everything stays local (no external egress):**
+
+```
+   Browser (victim/tester)
+        │  POST JSON / form
+        ▼
+   Flask app  @ 127.0.0.1:5000        <-- the only server involved
+        │  writes
+        ▼
+   Local storage:  lab.db (sqlite)  +  ./captures/*.png
+        │  reads
+        ▼
+   /dashboard  (operator view, same host)
+```
+
+- **Endpoints are all first-party.** Each module POSTs to the app's own routes —
+  `/api/geo`, `/api/cam`, `/api/portal` — and results are written to `lab.db`
+  and `./captures/`. No module sends data to any third party.
+- **No tunneling wired in.** The names `*.trycloudflare.com`, `*.ngrok-free.app`,
+  `*.loclx.io`, `*.serveo.net` appear only as *text* in the README and the
+  blue-team page (`detect.html`) — they are listed as **detection signals**, not
+  used. No code imports or connects to any tunnel service.
+- **Only one outbound link, user-initiated.** The dashboard renders an
+  OpenStreetMap URL for a captured coordinate; it opens only if *you* click it.
+  Nothing is fetched automatically.
+- **Bind scope is explicit.** Defaults to `127.0.0.1` (local only). LAN exposure
+  requires deliberately setting `LAB_HOST=0.0.0.0`, intended for isolated
+  lab VMs you own.
+- **Captured data is git-ignored.** `.gitignore` excludes `lab.db` and
+  `captures/`, so lab results never end up in the repo.
+
+**Residual risk (the point of the lab):** the danger is not in the plumbing —
+it is that the *techniques themselves work*. A look-alike form plus a logger
+really does capture a password; a consented `getUserMedia` call really does
+return a camera frame. The lab keeps that mechanism intact for study while
+stripping the covert delivery (no tunnels, consent banners on every page, and a
+"this was a simulation" ending on the credential flow).
+
 ## Why this is a *demo*, not a weapon
 
 Real versions of these tools are dangerous because they are **covert** and

@@ -1,6 +1,10 @@
 """
 edu-recon-lab  —  Educational reconnaissance prototype
 ======================================================
+🤖 Generated with Claude Code (Anthropic) — https://claude.com/claude-code
+Author: Newstarofsky <chanokchonop@gmail.com>
+For authorized educational use on systems you own. See SIGNATURE.txt.
+------------------------------------------------------
 A SINGLE Flask app that demonstrates the core mechanism behind three
 well-known security tools, for a supervised lab on systems you own:
 

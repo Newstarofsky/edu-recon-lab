@@ -1,0 +1,24 @@
+================================================================
+ edu-recon-lab — Signature / Attribution
+================================================================
+
+Project : edu-recon-lab
+Purpose : Educational cybersecurity lab prototype demonstrating
+          browser-permission recon (geolocation, webcam) and
+          phishing-awareness (credential capture) techniques,
+          plus a blue-team detection module.
+
+Author  : Newstarofsky <chanokchonop@gmail.com>
+Repo    : https://github.com/Newstarofsky/edu-recon-lab
+
+🤖 Generated with Claude Code (Anthropic)
+   https://claude.com/claude-code
+
+----------------------------------------------------------------
+Scope & ethics
+----------------------------------------------------------------
+For authorized educational use only, on systems and accounts you
+own or have written permission to test. All capture modules are
+consent-based (visible banners) and use a fictional brand. Do not
+deploy against anyone without informed consent.
+================================================================
